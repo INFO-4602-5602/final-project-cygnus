@@ -1,0 +1,182 @@
+<html>
+
+<head>
+	<title>Project 1: Zayo Opportunities</title>
+
+	<!--Include CSS-->
+	<link href="interaction.css" rel="stylesheet">
+	<!-- Latest compiled and minified Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Theme CSS -->
+	<!-- Theme From: https://startbootstrap.com/template-overviews/freelancer/ -->
+	<link href="freelancer.css" rel="stylesheet">
+	<!-- Custom Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
+	<!-- reference to Leaflet CSS -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<link rel="stylesheet" href="leaflet.awesome-markers.css">
+
+	<!--Include JavaScript Files-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
+	<script src="uStates.js"></script>
+	<!-- creates uStates. -->
+	<script src="https://use.fontawesome.com/f78ead1096.js"></script>
+	<!-- reference to Leaflet JavaScript -->
+	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+	<script src="leaflet.awesome-markers.js"></script>
+	<script src="leaflet-heat.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+	<script src="https://code.highcharts.com/modules/treemap.js"></script>
+
+	<link rel="stylesheet" href="MarkerCluster.css" />
+	<link rel="stylesheet" href="MarkerCluster.Default.css" />
+	<script src="leaflet.markercluster-src.js"></script>
+	<style>
+		body { padding-top: 100px; }
+	</style>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.0/bootstrap-slider.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.0/css/bootstrap-slider.min.css">
+</head>
+
+<body>
+	<!-- Navigation Bar -->
+	<nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header page-scroll">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+				</button>
+				<a class="navbar-brand" href="#">
+        			<img alt="Brand" src="images/CU_interlocked_500x483px.png" height="42" width="42" style="margin:-10px 0px 0px 0px">
+      			</a>
+				<a class="navbar-brand" href="#">Project 2: Visualizing Yelp</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="hidden">
+						<a href="#"></a>
+					</li>
+					<li class="page-scroll">
+						<a href="#partOne">Part One</a>
+					</li>
+					<li class="page-scroll">
+						<a href="#partTwo">Part Two</a>
+					</li>
+					<li class="page-scroll">
+						<a href="#partThree">Part Three</a>
+					</li>
+					<li class="page-scroll">
+						<a href="#partFour">Part Four</a>
+					</li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+	<div class='container'>
+
+		<div id="partOne" class="row">
+			<h2 style="text-align: center;">Part One</h2>
+			<div class="col-md-10" style="width: 100%;">
+				
+			</div>
+
+		</div>
+		
+		
+
+		<div id="partTwo" class="row">
+			<h2 style="text-align: center;">Part Two</h2>
+			<div id="map" class="row" style="margin: auto"></div>
+			<div class="row col-md-offset-5" style="padding-top: 20px;"> 
+				<input id="days" type="text" data-slider-ticks="[0, 1, 2, 3, 4, 5, 6]" data-slider-ticks-snap-bounds="50" data-slider-ticks-labels='["Mon", "Tue", "Wed", "Thu", "Fri"]' data-slider-value="0"/> 
+			</div>
+		</div>
+
+		<div id="partThree" class="row ">
+			<h2 style="text-align: center;">Part Three</h2>
+			
+		</div>
+
+		<div id="partFour" class="row">
+			<h2 style="text-align: center;"> Part Four</h2>
+		</div>
+
+		
+	</div>
+
+
+
+	<script>
+		var shiftWindow = function() { scrollBy(0, -100) };
+		if (location.hash) shiftWindow();
+		window.addEventListener("hashchange", shiftWindow);
+
+		$("#days").slider({
+    		ticks: [0, 1, 2, 3, 4, 5, 6],
+    		ticks_labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    		ticks_snap_bounds: 50
+		});
+
+		var heat = null;
+		var maxDayCheckin = 9692;
+		var map = L.map('map', {
+			preferCanvas: true
+		}).setView([36.264, -94.579], 4);
+		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
+		
+		var pointListDays = [];
+		var pointListMon = [];
+		var pointListTue = [];
+		var pointListWed = [];
+		var pointListThu = [];
+		var pointListFri = [];
+		var pointListSat = [];
+		var pointListSun = [];
+		d3.csv("processedData/checkin.csv", function(data) {
+			for (var i = 0; i < data.length; i++) {
+				var obj = data[i];
+				
+				pointListMon.push([obj['latitude'], obj['longitude'], ( obj['Mon']/maxDayCheckin )]);
+				pointListTue.push([obj['latitude'], obj['longitude'], ( obj['Tue']/maxDayCheckin )]);
+				pointListWed.push([obj['latitude'], obj['longitude'], ( obj['Wed']/maxDayCheckin )]);
+				pointListThu.push([obj['latitude'], obj['longitude'], ( obj['Thu']/maxDayCheckin )]);
+				pointListFri.push([obj['latitude'], obj['longitude'], ( obj['Fri']/maxDayCheckin )]);
+				pointListSat.push([obj['latitude'], obj['longitude'], ( obj['Sat']/maxDayCheckin )]);
+				pointListSun.push([obj['latitude'], obj['longitude'], ( obj['Sun']/maxDayCheckin )]);
+				
+				if (i === data.length - 1) {
+					pointListDays.push(pointListMon);
+					pointListDays.push(pointListTue);
+					pointListDays.push(pointListWed);
+					pointListDays.push(pointListThu);
+					pointListDays.push(pointListFri);
+					pointListDays.push(pointListSat);
+					pointListDays.push(pointListSun);
+					heat = L.heatLayer(pointListMon).addTo(map);
+				}
+			}
+		});
+
+		$("#days").on("change", function(e) {
+			heat.setLatLngs(pointListDays[e.value.newValue]);
+			//$("#ex6SliderVal").text(slideEvt.value);
+		});
+		
+	</script>
+
+</body>
