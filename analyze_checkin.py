@@ -21,17 +21,18 @@ checkin_list = []
 
 # Exclude Airport Checkins
 
-excludeList = []
-with open('processedData/airport_list.csv', 'rb') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+includeList = []
+with open('processedData/restaurants.csv', 'rb') as csvfile:
+    spamreader = csv.DictReader(csvfile)
+    #next(spamreader, None)  # skip the headers
     for row in spamreader:
-        excludeList.append( row[0] )
+        includeList.append( row['business_id'] )
 
-print excludeList
+print len(includeList)
 for line in fileObj:
     data = json.loads(line)
     business_id = data['business_id']
-    if business_id not in excludeList:
+    if business_id in includeList:
         business_obj = business_dic[business_id]
         lat = business_obj['latitude']
         lng = business_obj['longitude']
@@ -41,11 +42,11 @@ for line in fileObj:
         dict_obj['business_id'] = business_id
         countTotal = 0
         for time in data['time']:
-        	temp = time.split("-")
-        	day = temp[0]
-        	count = int(temp[-1].split(":")[-1])
-        	dict_obj[day] += count
-        	countTotal += count
+            temp = time.split("-")
+            day = temp[0]
+            count = int(temp[-1].split(":")[-1])
+            dict_obj[day] += count
+            countTotal += count
         dict_obj['All'] = countTotal
         #if bottom <= lat <= top and left <= lng <= right:
         #        c.append((lat, lng))
