@@ -40,6 +40,9 @@
 	<script src="leaflet.markercluster-src.js"></script>
 	<style>
 		body { padding-top: 100px; }
+		text.active {
+  			fill: red;
+		}
 	</style>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.0/bootstrap-slider.min.js"></script>
@@ -89,9 +92,15 @@
 
 		<div id="partOne" class="row">
 			<h2 style="text-align: center;">Part One</h2>
-			<div class="col-md-10" style="width: 100%;">
-				
-			</div>
+			<div class="form-group col-md-offset-5 col-md-3">
+                <label for="sel1">Order:</label>
+                <select class="form-control" id="order">
+                    <option value="name">by Name</option>
+  					<option value="count">by Review Count</option>
+  					<option value="group">by Cluster</option>
+                </select>
+            </div>
+			<div id="matrix"> </div>
 
 		</div>
 		
@@ -176,7 +185,192 @@
 			heat.setLatLngs(pointListDays[e.value.newValue]);
 			//$("#ex6SliderVal").text(slideEvt.value);
 		});
+
+
+		// Co-Occurence Matrix
+
+		var svgWidth = 1224;
+        var svgHeight = 1224;
+        var xOffset = 50;
+        var yOffset = 50;
+        var margin = 10;
+        var width = svgWidth - ( xOffset * 2 ) - ( margin * 2 );
+        var height = svgHeight - ( yOffset * 2 ) - ( margin * 2 );
+
+        var svg = d3.select("#matrix").append("svg:svg")
+                                    .attr("width", svgWidth)
+                                    .attr("height", svgHeight);
+
+        d3.json("processedData/force.json", function(miserables) {
+  			var matrix = [],
+      		nodes = miserables.nodes,
+      		n = nodes.length;
+
+  			// Compute index per node.
+  			nodes.forEach(function(node, i) {
+    			node.index = i;
+    			matrix[i] = d3.range(n).map(function(j) { return {x: j, y: i, z: 0}; });
+  			});
+
+  			// Convert links to matrix
+  			miserables.links.forEach(function(link) {
+    			matrix[link.source][link.target].z += 1;
+    			matrix[link.target][link.source].z += 1;
+    
+  			});
+
+
+  		// Precompute the orders.
+  		var orders = {
+    		name: d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].name, nodes[b].name); }),
+    		count: d3.range(n).sort(function(a, b) { return nodes[b].count - nodes[a].count; }),
+    		group: d3.range(n).sort(function(a, b) { return nodes[b].group - nodes[a].group; })
+  		};
+
+  		// The default sort order.
+  		
+
+  		var x = d3.scaleBand();
+  		var z = d3.scaleLinear().domain([0, 1]).clamp(true);
+    	var c = d3.scaleOrdinal(d3.schemeCategory10).domain([2,5]);
+  		x.domain(orders.name).range([yOffset + margin, svgHeight - margin - yOffset]);
+  		svg.append("rect")
+      		.attr("fill", "#eee")
+      		.attr("x", xOffset + margin)
+      		.attr("y", yOffset + margin)
+      		.attr("width", width)
+      		.attr("height", height);
+
+      	var row = svg.selectAll(".row")
+      		.data(matrix)
+    		.enter().append("g")
+      			.attr("class", "row")
+      			.each(row);
+      			
+
+      	row.append("line")
+      		.attr("x1", xOffset + margin)
+      		.attr("y1", function(d, i) {
+      			return x(i); })
+      		.attr("x2", xOffset + margin + width)
+      		.attr("y2", function(d, i) { 
+      			return x(i); })
+      		.attr("stroke-width", 0.5)
+	        .attr("stroke", "white");
+
+      	row.append("text")
+      		.attr("x", xOffset + margin / 2)
+      		.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; })
+      		.attr("dy", ".32em")
+      		.attr("text-anchor", "end")
+      		.style("font-size","14px")
+      		.text(function(d, i) { return nodes[i].name; });
+
 		
+
+		var column = svg.selectAll(".column")
+      		.data(matrix)
+    		.enter().append("g")
+      			.attr("class", "column");
+
+  		column.append("line")
+      		.attr("x1", function(d, i) { return x(i); })
+      		.attr("y1", xOffset + margin)
+      		.attr("x2", function(d, i) { return x(i); })
+      		.attr("y2", xOffset + margin + height)
+      		.attr("stroke-width", 0.5)
+	        .attr("stroke", "white");
+
+  		column.append("text")
+  			.attr("class", "text1")
+  			.attr("transform", "rotate(-90)")
+      		.attr("x", -(xOffset + margin / 2) )
+      		.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; })
+      		.attr("dy", ".32em")
+       		.attr("text-anchor", "start")
+      		.style("font-size","14px")
+      		.text(function(d, i) { return nodes[i].name; });
+      	
+
+      	column.append("text")
+      		.attr("class", "text2")
+  			.attr("transform", "rotate(-90)")
+      		.attr("x", -(xOffset + margin * 1.5) - width )
+      		.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; })
+      		.attr("dy", ".32em")
+       		.attr("text-anchor", "end")
+      		.style("font-size","14px")
+      		.text(function(d, i) { return nodes[i].name; });
+
+      	function row(row) {
+    		var cell = d3.select(this).selectAll(".cell")
+        				.data(row.filter(function(d) { return d.z; }))
+      				.enter().append("rect")
+        				.attr("class", "cell")
+        				.attr("x", function(d) { return x(d.x); })
+        				.attr("y", function(d) { return x(d.y); })
+        				.attr("width", x.bandwidth())
+        				.attr("height", x.bandwidth())
+        				.style("fill-opacity", function(d) { return z(d.z); })
+        				.style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : 'gray'; })
+        				.on("mouseover", mouseover)
+        				.on("mouseout", mouseout);
+  		}
+
+  		function mouseover(p) {
+    		d3.selectAll(".row text").classed("active", function(d, i) { return i == p.y; });
+    		d3.selectAll(".column .text1").classed("active", function(d, i) { return i == p.x; });
+    		d3.selectAll(".column .text2").classed("active", function(d, i) { return i == p.x; });
+  		}
+
+  		function mouseout() {
+    		d3.selectAll("text").classed("active", false);
+  		}
+
+  		d3.select("#order").on("change", function() {
+    		order(this.value);
+  		});
+
+  		function order(value) {
+    		x.domain(orders[value]);
+
+
+    		var t = svg.transition().duration(2500);
+
+    		t.selectAll(".row text")
+        		.delay(function(d, i) { return x(i) * 4; })
+        		.attr("x", xOffset + margin / 2)
+      			.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; });
+      		t.selectAll(".row line")
+      		 	.delay(function(d, i) { return x(i) * 4; })
+      		 	.attr("x1", xOffset + margin)
+      			.attr("y1", function(d, i) {
+      			return x(i); })
+      			.attr("x2", xOffset + margin + width)
+      			.attr("y2", function(d, i) { 
+      			return x(i); });
+      		t.selectAll(".cell")
+        		.delay(function(d) { return x(d.x) * 4; })
+        		.attr("x", function(d) { return x(d.x); })
+        		.attr("y", function(d) { return x(d.y); });
+
+    		t.selectAll(".column line")
+        		.delay(function(d, i) { return x(i) * 4; })
+        		.attr("x1", function(d, i) { return x(i); })
+      			.attr("y1", xOffset + margin)
+      			.attr("x2", function(d, i) { return x(i); })
+      			.attr("y2", xOffset + margin + height);
+      		t.selectAll(".column .text1")
+        		.delay(function(d, i) { return x(i) * 4; })
+        		.attr("x", -(xOffset + margin / 2) )
+      			.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; });
+      		t.selectAll(".column .text2")
+        		.delay(function(d, i) { return x(i) * 4; })
+        		.attr("x", -(xOffset + margin * 1.5) - width )
+      			.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; });
+  		}
+
+      	});
 	</script>
 
 </body>
