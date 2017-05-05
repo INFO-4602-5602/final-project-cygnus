@@ -21,11 +21,12 @@
 
 	<!--Include JavaScript Files-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <script src="https://cdn.rawgit.com/bmabey/pyLDAvis/files/ldavis.v1.0.0.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
-	<script src="vis1.js"></script>
+	
 	<!-- creates uStates. -->
 	<script src="https://use.fontawesome.com/f78ead1096.js"></script>
 	<!-- reference to Leaflet JavaScript -->
@@ -130,7 +131,7 @@
 	</div>
 
 
-
+  <script src="vis1.js"></script>
 	<script>
 		var shiftWindow = function() { scrollBy(0, -100) };
 		if (location.hash) shiftWindow();
@@ -233,10 +234,10 @@
   		// The default sort order.
   		
 
-  		var x = d3.scaleBand();
-  		var z = d3.scaleLinear().domain([0, 1]).clamp(true);
-    	var c = d3.scaleOrdinal(d3.schemeCategory10).domain([2,5]);
-  		x.domain(orders.name).range([yOffset + margin, svgHeight - margin - yOffset]);
+  		var x = d3.scale.ordinal();
+  		var z = d3.scale.linear().domain([0, 1]).clamp(true);
+    	var c = d3.scale.category10().domain([2,5]);
+  		x.domain(orders.name).rangeBands([yOffset + margin, svgHeight - margin - yOffset]);
   		svg.append("rect")
       		.attr("fill", "#eee")
       		.attr("x", xOffset + margin)
@@ -263,7 +264,7 @@
 
       	row.append("text")
       		.attr("x", xOffset + margin / 2)
-      		.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; })
+      		.attr("y", function(d, i) { return x(i) + x.rangeBand() / 2; })
       		.attr("dy", ".32em")
       		.attr("text-anchor", "end")
       		.style("font-size","14px")
@@ -288,7 +289,7 @@
   			.attr("class", "text1")
   			.attr("transform", "rotate(-90)")
       		.attr("x", -(xOffset + margin / 2) )
-      		.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; })
+      		.attr("y", function(d, i) { return x(i) + x.rangeBand() / 2; })
       		.attr("dy", ".32em")
        		.attr("text-anchor", "start")
       		.style("font-size","14px")
@@ -299,7 +300,7 @@
       		.attr("class", "text2")
   			.attr("transform", "rotate(-90)")
       		.attr("x", -(xOffset + margin * 1.5) - width )
-      		.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; })
+      		.attr("y", function(d, i) { return x(i) + x.rangeBand() / 2; })
       		.attr("dy", ".32em")
        		.attr("text-anchor", "end")
       		.style("font-size","14px")
@@ -312,8 +313,8 @@
         				.attr("class", "cell")
         				.attr("x", function(d) { return x(d.x); })
         				.attr("y", function(d) { return x(d.y); })
-        				.attr("width", x.bandwidth())
-        				.attr("height", x.bandwidth())
+        				.attr("width", x.rangeBand())
+        				.attr("height", x.rangeBand())
         				.style("fill-opacity", function(d) { return z(d.z); })
         				.style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : 'gray'; })
         				.on("mouseover", mouseover)
@@ -343,7 +344,7 @@
     		t.selectAll(".row text")
         		.delay(function(d, i) { return x(i) * 4; })
         		.attr("x", xOffset + margin / 2)
-      			.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; });
+      			.attr("y", function(d, i) { return x(i) + x.rangeBand() / 2; });
       		t.selectAll(".row line")
       		 	.delay(function(d, i) { return x(i) * 4; })
       		 	.attr("x1", xOffset + margin)
@@ -366,11 +367,11 @@
       		t.selectAll(".column .text1")
         		.delay(function(d, i) { return x(i) * 4; })
         		.attr("x", -(xOffset + margin / 2) )
-      			.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; });
+      			.attr("y", function(d, i) { return x(i) + x.rangeBand() / 2; });
       		t.selectAll(".column .text2")
         		.delay(function(d, i) { return x(i) * 4; })
         		.attr("x", -(xOffset + margin * 1.5) - width )
-      			.attr("y", function(d, i) { return x(i) + x.bandwidth() / 2; });
+      			.attr("y", function(d, i) { return x(i) + x.rangeBand() / 2; });
   		}
 
       	});
