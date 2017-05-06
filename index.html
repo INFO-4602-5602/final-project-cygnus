@@ -127,6 +127,10 @@
 			<h2 style="text-align: center;"> Part Four</h2>
 		</div>
 
+    <div id="partFive" class="row">
+      <h2 style="text-align: center;">Part Five</h2>
+      <div id="markermap" style="margin: auto"></div>
+    </div>
 		
 	</div>
 
@@ -375,6 +379,64 @@
   		}
 
       	});
+      
+      var markermap = L.map('markermap', {
+      preferCanvas: true
+      }).setView([36.264, -94.579], 5);
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(markermap);
+      var redMarker = L.AwesomeMarkers.icon({
+        prefix: 'fa',
+        icon: 'money',
+        markerColor: 'blue',
+        iconColor: 'black'
+      });
+      var yellowMarker = L.AwesomeMarkers.icon({
+        prefix: 'fa',
+        icon: 'wrench',
+        markerColor: 'blue',
+        iconColor: 'black'
+      });
+      var greenMarker = L.AwesomeMarkers.icon({
+        prefix: 'fa',
+        icon: 'building-o',
+        markerColor: 'blue',
+        iconColor: 'black'
+      });
+
+      var markers = L.markerClusterGroup();
+      var markerList = [];
+
+      d3.csv("processedData/markers.csv", function(data) {
+        for (var i = 0; i < data.length; i++) {
+          var obj = data[i];
+          var marker;
+          if (obj['latitude'] !== '' && obj['longitude'] !== '') {
+            if (obj['marker'] === 'Burger') {
+              marker = L.marker([obj['latitude'], obj['longitude']], {
+                icon: redMarker
+              })
+
+            }
+            if (obj['marker'] === 'Pizza') {
+              marker = L.marker([obj['latitude'], obj['longitude']], {
+                icon: greenMarker
+              })
+            }
+            if (obj['marker'] === 'Coffee') {
+              marker = L.marker([obj['latitude'], obj['longitude']], {
+                icon: yellowMarker
+              })
+            }
+            markerList.push(marker);
+          }
+          if (i === data.length - 1) {
+            markers.addLayers(markerList);
+            markermap.addLayer(markers);
+          }
+        }
+      });
 	</script>
 
 </body>
