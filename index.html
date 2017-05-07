@@ -1,7 +1,7 @@
 <html>
 
 <head>
-	<title>Project 1: Zayo Opportunities</title>
+	<title>Project 2: Visualizing Yelp</title>
 
 	<!--Include CSS-->
   
@@ -87,17 +87,20 @@
 						<a href="#"></a>
 					</li>
 					<li class="page-scroll">
-						<a href="#partOne">Part One</a>
+						<a href="#partOne">User Network</a>
 					</li>
 					<li class="page-scroll">
-						<a href="#partTwo">Part Two</a>
+						<a href="#partTwo">Heat Map</a>
 					</li>
 					<li class="page-scroll">
-						<a href="#partThree">Part Three</a>
+						<a href="#partThree">Topic Modelling</a>
 					</li>
 					<li class="page-scroll">
-						<a href="#partFour">Part Four</a>
+						<a href="#partFour">Trend</a>
 					</li>
+          <li class="page-scroll">
+            <a href="#partFive">Locations</a>
+          </li>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -107,7 +110,7 @@
 	<div class='container'>
 
 		<div id="partOne" class="row">
-			<h2 style="text-align: center;">Part One</h2>
+			<h2 style="text-align: center;">User Network</h2>
 			<div class="form-group col-md-offset-5 col-md-3">
                 <label for="sel1">Order:</label>
                 <select class="form-control" id="order">
@@ -123,7 +126,7 @@
 		
 
 		<div id="partTwo" class="row">
-			<h2 style="text-align: center;">Part Two</h2>
+			<h2 style="text-align: center;">Checkin HeatMap</h2>
 			<div id="map" class="row" style="margin: auto"></div>
 			<div class="row col-md-offset-5" style="padding-top: 20px;"> 
 				<input id="days" type="text" data-slider-ticks="[0, 1, 2, 3, 4, 5, 6]" data-slider-ticks-snap-bounds="50" data-slider-ticks-labels='["Mon", "Tue", "Wed", "Thu", "Fri"]' data-slider-value="0"/> 
@@ -131,20 +134,21 @@
 		</div>
 
 		<div id="partThree" class="row ">
-			<h2 style="text-align: center;">Part Three</h2>
+			<h2 style="text-align: center;">Topic Modelling</h2>
 			<div class="col-md-offset-1" id="ldavis_el48181399471630638884064191800"></div>
 			
 		</div>
 
     <div id="tooltip"></div>
 		<div id="partFour" class="row">
-			<h2 style="text-align: center;"> Part Four</h2>
+			<h2 style="text-align: center;">Top 10 Business Reviews Trends</h2>
       <div class="col-md-offset-2" id="trend"> </div>
+      <h5 style="text-align: center;">Rating Per Day</h5>
       <div class="col-md-offset-4 col-md-offset-4" id="calendar_basic"></div>
 		</div>
 
     <div id="partFive" class="row">
-      <h2 style="text-align: center;">Part Five</h2>
+      <h2 style="text-align: center;">Coffe Pizza Burger Locations</h2>
       <div id="markermap" style="margin: auto"></div>
     </div>
 		
@@ -613,6 +617,9 @@
                             .style( 'stroke-width', '3px')
                             .style( 'cursor', 'default' );
                         d3.select("#tooltip").transition().duration(500).style("opacity", 0);
+                    })
+                    .on('click', function(d){
+                        drawChart(d.name)
                     });
       });
 
@@ -628,6 +635,7 @@
         filename = 'processedData/' + businessID + 'Aggregates.csv' 
        }
        else{
+        businessID = '2weQS-RnoOBhb1KsHKyoSQ'
         filename = 'processedData/' + '2weQS-RnoOBhb1KsHKyoSQ' + 'Aggregates.csv'
        }
        var chart = new google.visualization.Calendar(document.getElementById('calendar_basic'));
@@ -643,6 +651,7 @@
         
         dataTable.addRows( list );
         var options = {
+         title: 'Business ID: ' + businessID,
          height: 1100,
          calendar: {
           cellSize:10,
