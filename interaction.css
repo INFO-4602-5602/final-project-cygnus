@@ -49,6 +49,10 @@
     width: 960px;
     height:600px;
 }
+#markermap {
+    width: 960px;
+    height:600px;
+}
 #treeMap {
     min-width: 960px;
     max-width: 960px;

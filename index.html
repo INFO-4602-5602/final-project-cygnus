@@ -386,24 +386,42 @@
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(markermap);
-      var redMarker = L.AwesomeMarkers.icon({
-        prefix: 'fa',
-        icon: 'money',
-        markerColor: 'blue',
-        iconColor: 'black'
-      });
-      var yellowMarker = L.AwesomeMarkers.icon({
-        prefix: 'fa',
-        icon: 'wrench',
-        markerColor: 'blue',
-        iconColor: 'black'
-      });
-      var greenMarker = L.AwesomeMarkers.icon({
-        prefix: 'fa',
-        icon: 'building-o',
-        markerColor: 'blue',
-        iconColor: 'black'
-      });
+      //var redMarker = L.AwesomeMarkers.icon({
+        //prefix: 'fa',
+        //icon: 'money',
+        //markerColor: 'blue',
+        //iconColor: 'black'
+      //});
+      var redMarker = L.icon({
+                        iconUrl: 'images/burger.png',
+                        //shadowUrl: 'leaf-shadow.png',
+
+                        iconSize:     [30, 30], // size of the icon
+                        //shadowSize:   [50, 64], // size of the shadow
+                        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+                        //shadowAnchor: [4, 62],  // the same for the shadow
+                        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+                      });
+      var yellowMarker = L.icon({
+                        iconUrl: 'images/coffee.png',
+                        //shadowUrl: 'leaf-shadow.png',
+
+                        iconSize:     [30, 30], // size of the icon
+                        //shadowSize:   [50, 64], // size of the shadow
+                        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+                        //shadowAnchor: [4, 62],  // the same for the shadow
+                        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+                      });
+      var greenMarker = L.icon({
+                        iconUrl: 'images/pizza.png',
+                        //shadowUrl: 'leaf-shadow.png',
+
+                        iconSize:     [30, 30], // size of the icon
+                        //shadowSize:   [50, 64], // size of the shadow
+                        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+                        //shadowAnchor: [4, 62],  // the same for the shadow
+                        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+                      });
 
       var markers = L.markerClusterGroup();
       var markerList = [];
@@ -416,18 +434,36 @@
             if (obj['marker'] === 'Burger') {
               marker = L.marker([obj['latitude'], obj['longitude']], {
                 icon: redMarker
-              })
+              }).bindPopup("<b>Burger Joint</b>" +
+              "<br><b>Name:</b> " + obj['name'] +
+              "<br><a href='http://www.yelp.com/biz/" + obj['business_id'] + "' target='_blank'><b>Open in Yelp</b></a>" +
+              "<br><b>Postal Code:</b> " + obj['postal_code'] +
+              "<br><b>Rating:</b> " + obj['stars'] +
+              "<br><b>Categories:</b> " + obj['categories']
+            );
 
             }
             if (obj['marker'] === 'Pizza') {
               marker = L.marker([obj['latitude'], obj['longitude']], {
                 icon: greenMarker
-              })
+              }).bindPopup("<b>Pizza Parlor</b>" +
+              "<br><b>Name:</b> " + obj['name'] +
+              "<br><a href='http://www.yelp.com/biz/" + obj['business_id'] + "' target='_blank'><b>Open in Yelp</b></a>" +
+              "<br><b>Postal Code:</b> " + obj['postal_code'] +
+              "<br><b>Rating:</b> " + obj['stars'] +
+              "<br><b>Categories:</b> " + obj['categories']
+            );
             }
             if (obj['marker'] === 'Coffee') {
               marker = L.marker([obj['latitude'], obj['longitude']], {
                 icon: yellowMarker
-              })
+              }).bindPopup("<b>Cafe</b>" +
+              "<br><b>Name:</b> " + obj['name'] +
+              "<br><a href='http://www.yelp.com/biz/" + obj['business_id'] + "' target='_blank'><b>Open in Yelp</b></a>" +
+              "<br><b>Postal Code:</b> " + obj['postal_code'] +
+              "<br><b>Rating:</b> " + obj['stars'] +
+              "<br><b>Categories:</b> " + obj['categories']
+            );
             }
             markerList.push(marker);
           }
@@ -440,3 +476,4 @@
 	</script>
 
 </body>
+''
