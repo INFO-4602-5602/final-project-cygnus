@@ -446,7 +446,7 @@
       var markers = L.markerClusterGroup();
       var markerList = [];
 
-      d3.csv("processedData/markers.csv", function(data) {
+      d3.csv("processedData/markers_four_stars.csv", function(data) {
         for (var i = 0; i < data.length; i++) {
           var obj = data[i];
           var marker;
