@@ -1,7 +1,7 @@
 # Final Project: Visualizing Yelp Data
 For our final project we decided to Visualize the Yelp Data which is part of [Yelp Data Challenge](https://www.yelp.com/dataset_challenge). The data-set consist of Users, Reviews, Businesses, Tips and Checkins. Additionaly it also has images associated with businesses. 
 
-<h2>Team Memember:</h2>
+<h2>Team Members:</h2>
 <ul>
 <li>Naif Alharthi</li>
 <li>Aadish Gupta</li> 
