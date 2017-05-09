@@ -23,4 +23,4 @@ For our final project we decided to Visualize the Yelp Data which is part of [Ye
 Start your local web server using your favorite tool (npm, python, etc.) and navigate to localhost:8000 and open the index.html file. On Linux, if using Python 3+, use python3 -m http.server from inside the project directory to start a local web server on localhost:8000.
 
 <h2>Project Report</h2>
-[Link](#) to Project Report
+[Project Report](https://github.com/INFO-4602-5602/final-project-cygnus/blob/master/infovisFinalProjectReport.pdf)
